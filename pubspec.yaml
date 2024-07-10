@@ -30,6 +30,8 @@ environment:
 dependencies:
   syncfusion_flutter_charts: ^21.2.8
   cupertino_icons: ^1.0.6
+  http: ^0.13.3
+  flutter_echarts: #latest version
 
   flutter:
     sdk: flutter

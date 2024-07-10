@@ -4,8 +4,14 @@ import '../models/chart_data.dart';
 
 class ChartWidget extends StatelessWidget {
   final List<ChartData> data;
+  final String xAxisLabel;
+  final String yAxisLabel;
 
-  ChartWidget({required this.data});
+  ChartWidget({
+    required this.data,
+    required this.xAxisLabel,
+    required this.yAxisLabel,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +26,29 @@ class ChartWidget extends StatelessWidget {
     return SizedBox(
       height: 500,
       child: SfCartesianChart(
-        primaryXAxis: NumericAxis(),
+        primaryXAxis: NumericAxis(
+          title: AxisTitle(
+            text: xAxisLabel,
+            textStyle: TextStyle(
+              color: Colors.black,
+              fontFamily: 'Roboto',
+              fontSize: 14,
+              fontStyle: FontStyle.italic,
+              fontWeight: FontWeight.w300,
+            ),
+          ),
+        ),
         primaryYAxis: NumericAxis(
+          title: AxisTitle(
+            text: yAxisLabel,
+            textStyle: TextStyle(
+              color: Colors.black,
+              fontFamily: 'Roboto',
+              fontSize: 14,
+              fontStyle: FontStyle.italic,
+              fontWeight: FontWeight.w300,
+            ),
+          ),
           minimum: minY,
           maximum: maxY,
         ),
