@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import '../models/row_data.dart';
 import '../widgets/row_item.dart';
 
@@ -9,6 +11,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<RowData> rows = [RowData()];
+  List<_ChartData> _chartData = [];
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +51,13 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
           ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: _generateRandomData,
+            child: Text('Generate Plot'),
+          ),
+          SizedBox(height: 20),
+          _buildChart(),
         ],
       ),
     );
@@ -80,4 +90,43 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     }
   }
+
+  void _generateRandomData() {
+    final random = Random();
+    final data = List.generate(100, (i) {
+      double x = i.toDouble();
+      double y = sin(x * pi / 50) + random.nextDouble() * 0.5;
+      return _ChartData(x, y);
+    });
+
+    setState(() {
+      _chartData = data;
+    });
+  }
+
+  Widget _buildChart() {
+    return _chartData.isEmpty
+        ? Container()
+        : SizedBox(
+            height: 200,
+            child: SfCartesianChart(
+              primaryXAxis: NumericAxis(),
+              primaryYAxis: NumericAxis(),
+              series: <ChartSeries>[
+                LineSeries<_ChartData, double>(
+                  dataSource: _chartData,
+                  xValueMapper: (_ChartData data, _) => data.x,
+                  yValueMapper: (_ChartData data, _) => data.y,
+                )
+              ],
+            ),
+          );
+  }
+}
+
+class _ChartData {
+  final double x;
+  final double y;
+
+  _ChartData(this.x, this.y);
 }
