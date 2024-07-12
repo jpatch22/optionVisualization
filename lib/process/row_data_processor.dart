@@ -74,14 +74,13 @@ class RowDataProcessor {
 
 
     if (row.longShort == "Long" && row.putCall == "Call") {
-      // nothing for now
       yList = [for (double sp in stockPriceRange) max(0.0, sp - contractPrice)];
     } else if (row.longShort == "Long" && row.putCall == "Put") {
-      // nothing
+      yList = [for (double sp in stockPriceRange) max(0.0, contractPrice - sp)];
     } else if (row.putCall == "Call") {
-      // nothing 
+      yList = [for (double sp in stockPriceRange) min(0.0, sp - contractPrice)];
     } else {
-      // nothing for now
+      yList = [for (double sp in stockPriceRange) min(0.0, contractPrice - sp)];
     }
     for (int i = 0; i < stockPriceRange.length; i++) {
       chartData.add(ChartData(stockPriceRange[i], yList[i]));
