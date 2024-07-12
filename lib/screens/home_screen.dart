@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'dart:math';
-import 'package:syncfusion_flutter_charts/charts.dart';
 import '../models/row_data.dart';
 import '../widgets/row_item.dart';
+import '../widgets/chart_widget.dart';
+import '../process/data_generator.dart';
+import '../process/row_data_processor.dart';
+import '../models/chart_data.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -11,13 +13,15 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<RowData> rows = [RowData()];
-  List<_ChartData> _chartData = [];
+  List<ChartData> _chartData = [];
+  final DataGenerator _dataGenerator = DataGenerator();
+  final RowDataProcessor _rowDataProcessor = RowDataProcessor();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Flutter Dynamic Rows'),
+        title: Text('Option Valuation Visualizer'),
       ),
       body: Column(
         children: <Widget>[
@@ -57,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Text('Generate Plot'),
           ),
           SizedBox(height: 20),
-          _buildChart(),
+          ChartWidget(data: _chartData),
         ],
       ),
     );
@@ -92,41 +96,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _generateRandomData() {
-    final random = Random();
-    final data = List.generate(100, (i) {
-      double x = i.toDouble();
-      double y = sin(x * pi / 50) + random.nextDouble() * 0.5;
-      return _ChartData(x, y);
-    });
-
     setState(() {
-      _chartData = data;
+      // _chartData = _dataGenerator.generateRandomData(100);
+      _chartData = _rowDataProcessor.calcMultOptionValAtExpiry(rows, 10, 15);
     });
   }
-
-  Widget _buildChart() {
-    return _chartData.isEmpty
-        ? Container()
-        : SizedBox(
-            height: 200,
-            child: SfCartesianChart(
-              primaryXAxis: NumericAxis(),
-              primaryYAxis: NumericAxis(),
-              series: <ChartSeries>[
-                LineSeries<_ChartData, double>(
-                  dataSource: _chartData,
-                  xValueMapper: (_ChartData data, _) => data.x,
-                  yValueMapper: (_ChartData data, _) => data.y,
-                )
-              ],
-            ),
-          );
-  }
-}
-
-class _ChartData {
-  final double x;
-  final double y;
-
-  _ChartData(this.x, this.y);
 }
