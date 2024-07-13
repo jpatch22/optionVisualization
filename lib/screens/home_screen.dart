@@ -5,6 +5,7 @@ import '../widgets/chart_widget.dart';
 import '../process/data_generator.dart';
 import '../process/row_data_processor.dart';
 import '../models/chart_data.dart';
+import '../widgets/range_selector.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -17,16 +18,27 @@ class _MyHomePageState extends State<MyHomePage> {
   final DataGenerator _dataGenerator = DataGenerator();
   final RowDataProcessor _rowDataProcessor = RowDataProcessor();
 
+  RangeValues _selectedRange = RangeValues(10, 15);
+  TextEditingController _stockValueController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _generateRandomData(); // Initial plot generation
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Option Valuation Visualizer'),
       ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: ListView.builder(
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
               itemCount: rows.length,
               itemBuilder: (context, index) {
                 return Padding(
@@ -55,15 +67,51 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
             ),
-          ),
-          SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: _generateRandomData,
-            child: Text('Generate Plot'),
-          ),
-          SizedBox(height: 20),
-          ChartWidget(data: _chartData),
-        ],
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: _generateRandomData,
+                  child: Text('Generate Plot'),
+                ),
+                SizedBox(width: 10), // Adjust the width as needed
+                Row(
+                  children: [
+                    Text('Stock Value: '),
+                    Container(
+                      width: 100, // Adjust the width as needed
+                      child: TextField(
+                        controller: _stockValueController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(height: 10),
+            RangeSelector(
+              min: 0,
+              max: 20,
+              initialRange: _selectedRange,
+              onRangeChanged: (values) {
+                setState(() {
+                  _selectedRange = values;
+                  _generateRandomData(); // Redraw plot on range change
+                });
+              },
+            ),
+            SizedBox(height: 10),
+            Container(
+              height: 400, // Adjust this value to make the plot larger vertically
+              child: ChartWidget(data: _chartData),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -97,8 +145,13 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _generateRandomData() {
+    double stockValue = double.tryParse(_stockValueController.text) ?? 0.0;
     setState(() {
-      _chartData = _rowDataProcessor.calcMultOptionValAtExpiry(rows, 10, 15);
+      _chartData = _rowDataProcessor.calcMultOptionValAtExpiry(
+        rows,
+        _selectedRange.start,
+        _selectedRange.end,
+      );
     });
   }
 }

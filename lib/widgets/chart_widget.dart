@@ -18,7 +18,7 @@ class ChartWidget extends StatelessWidget {
     double maxY = data.map((d) => d.y).reduce((a, b) => a > b ? a : b);
 
     return SizedBox(
-      height: 200,
+      height: 500,
       child: SfCartesianChart(
         primaryXAxis: NumericAxis(),
         primaryYAxis: NumericAxis(
