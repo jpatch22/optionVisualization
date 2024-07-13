@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 class RangeSelector extends StatefulWidget {
   final double min;
   final double max;
-  final RangeValues initialRange;
+  final ValueNotifier<RangeValues> rangeNotifier;
   final ValueChanged<RangeValues> onRangeChanged;
 
   RangeSelector({
     Key? key,
     required this.min,
     required this.max,
-    required this.initialRange,
+    required this.rangeNotifier,
     required this.onRangeChanged,
   }) : super(key: key);
 
@@ -19,16 +19,26 @@ class RangeSelector extends StatefulWidget {
 }
 
 class _RangeSelectorState extends State<RangeSelector> {
-  late RangeValues _currentRangeValues;
-
   @override
   void initState() {
     super.initState();
-    _currentRangeValues = widget.initialRange;
+    widget.rangeNotifier.addListener(_updateRange);
+  }
+
+  @override
+  void dispose() {
+    widget.rangeNotifier.removeListener(_updateRange);
+    super.dispose();
+  }
+
+  void _updateRange() {
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
+    final rangeValues = widget.rangeNotifier.value;
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -39,36 +49,34 @@ class _RangeSelectorState extends State<RangeSelector> {
         Row(
           children: [
             Text(
-              'Start: ${_currentRangeValues.start.round()}',
+              'Start: ${rangeValues.start.round()}',
               style: TextStyle(fontSize: 16),
             ),
             Expanded(
               child: RangeSlider(
-                values: _currentRangeValues,
+                values: rangeValues,
                 min: widget.min,
                 max: widget.max,
                 divisions: 100,
                 labels: RangeLabels(
-                  _currentRangeValues.start.round().toString(),
-                  _currentRangeValues.end.round().toString(),
+                  rangeValues.start.round().toString(),
+                  rangeValues.end.round().toString(),
                 ),
                 onChanged: (RangeValues values) {
-                  setState(() {
-                    _currentRangeValues = values;
-                  });
+                  widget.rangeNotifier.value = values;
                   widget.onRangeChanged(values); // Notify parent of changes
                 },
               ),
             ),
             Text(
-              'End: ${_currentRangeValues.end.round()}',
+              'End: ${rangeValues.end.round()}',
               style: TextStyle(fontSize: 16),
             ),
           ],
         ),
         SizedBox(height: 20),
         Text(
-          'Selected range: ${_currentRangeValues.start.round()} - ${_currentRangeValues.end.round()}',
+          'Selected range: ${rangeValues.start.round()} - ${rangeValues.end.round()}',
           style: TextStyle(fontSize: 16),
         ),
       ],

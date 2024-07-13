@@ -19,7 +19,10 @@ class _MyHomePageState extends State<MyHomePage> {
   final RowDataProcessor _rowDataProcessor = RowDataProcessor();
 
   RangeValues _selectedRange = RangeValues(10, 15);
+  RangeValues _initialRange = RangeValues(10, 15);
+  double maxRange = 100.0;
   TextEditingController _stockValueController = TextEditingController();
+  ValueNotifier<RangeValues> _selectedRangeNotifier = ValueNotifier(RangeValues(10, 15));
 
   @override
   void initState() {
@@ -72,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                  onPressed: _generateRandomData,
+                  onPressed: _generatePlot,
                   child: Text('Generate Plot'),
                 ),
                 SizedBox(width: 10), // Adjust the width as needed
@@ -96,13 +99,11 @@ class _MyHomePageState extends State<MyHomePage> {
             SizedBox(height: 10),
             RangeSelector(
               min: 0,
-              max: 20,
-              initialRange: _selectedRange,
+              max: 100,
+              rangeNotifier: _selectedRangeNotifier,
               onRangeChanged: (values) {
-                setState(() {
-                  _selectedRange = values;
-                  _generateRandomData(); // Redraw plot on range change
-                });
+                _selectedRange = values;
+                _generateRandomData(); // Redraw plot on range change
               },
             ),
             SizedBox(height: 10),
@@ -144,8 +145,15 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void _generateRandomData() {
+  void _generatePlot() {
     double stockValue = double.tryParse(_stockValueController.text) ?? 0.0;
+    _selectedRange = RangeValues(1, 10);
+    _initialRange = RangeValues(1, 10);
+
+    _generateRandomData();
+  }
+
+  void _generateRandomData() {
     setState(() {
       _chartData = _rowDataProcessor.calcMultOptionValAtExpiry(
         rows,
