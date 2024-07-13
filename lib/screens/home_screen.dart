@@ -17,20 +17,19 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<RowData> rows = [RowData()];
   List<ChartData> _chartData = [];
-  final DataGenerator _dataGenerator = DataGenerator();
   final RowDataProcessor _rowDataProcessor = RowDataProcessor();
 
   RangeValues _selectedRange = RangeValues(10, 15);
-  ValueNotifier<double> _maxVal = ValueNotifier(100.0);
-  ValueNotifier<double> _minVal = ValueNotifier(0.0);
+  final ValueNotifier<double> _maxVal = ValueNotifier(100.0);
+  final ValueNotifier<double> _minVal = ValueNotifier(0.0);
   double maxRange = 100.0;
-  TextEditingController _stockValueController = TextEditingController();
-  ValueNotifier<RangeValues> _selectedRangeNotifier = ValueNotifier(RangeValues(10, 15));
+  final TextEditingController _stockValueController = TextEditingController();
+  final ValueNotifier<RangeValues> _selectedRangeNotifier = ValueNotifier(RangeValues(10, 15));
 
   @override
   void initState() {
     super.initState();
-    _generateRandomData(); // Initial plot generation
+    _drawPlot();
   }
 
   @override
@@ -81,12 +80,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPressed: _generatePlot,
                   child: Text('Generate Plot'),
                 ),
-                SizedBox(width: 10), // Adjust the width as needed
+                SizedBox(width: 10),
                 Row(
                   children: [
                     Text('Stock Value: '),
                     Container(
-                      width: 100, // Adjust the width as needed
+                      width: 100,
                       child: TextField(
                         controller: _stockValueController,
                         keyboardType: TextInputType.number,
@@ -106,12 +105,12 @@ class _MyHomePageState extends State<MyHomePage> {
               rangeNotifier: _selectedRangeNotifier,
               onRangeChanged: (values) {
                 _selectedRange = values;
-                _generateRandomData(); // Redraw plot on range change
+                _drawPlot();
               },
             ),
             SizedBox(height: 10),
             Container(
-              height: 400, // Adjust this value to make the plot larger vertically
+              height: 400,
               child: ChartWidget(data: _chartData),
             ),
           ],
@@ -155,10 +154,10 @@ class _MyHomePageState extends State<MyHomePage> {
     _minVal.value = 0.0;
     _maxVal.value = 10 * stockValue;
 
-    _generateRandomData();
+    _drawPlot();
   }
 
-  void _generateRandomData() {
+  void _drawPlot() {
     setState(() {
       _chartData = _rowDataProcessor.calcMultOptionValAtExpiry(
         rows,

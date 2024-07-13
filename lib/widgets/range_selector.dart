@@ -68,7 +68,7 @@ class _RangeSelectorState extends State<RangeSelector> {
                 ),
                 onChanged: (RangeValues values) {
                   widget.rangeNotifier.value = values;
-                  widget.onRangeChanged(values); // Notify parent of changes
+                  widget.onRangeChanged(values);
                 },
               ),
             ),

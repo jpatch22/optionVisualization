@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:math';
 import '../models/row_data.dart';
 import '../models/chart_data.dart';
@@ -78,9 +77,9 @@ class RowDataProcessor {
     } else if (row.longShort == "Long" && row.putCall == "Put") {
       yList = [for (double sp in stockPriceRange) max(0.0, contractPrice - sp)];
     } else if (row.putCall == "Call") {
-      yList = [for (double sp in stockPriceRange) min(0.0, sp - contractPrice)];
-    } else {
       yList = [for (double sp in stockPriceRange) min(0.0, contractPrice - sp)];
+    } else {
+      yList = [for (double sp in stockPriceRange) min(0.0, sp - contractPrice)];
     }
     for (int i = 0; i < stockPriceRange.length; i++) {
       chartData.add(ChartData(stockPriceRange[i], yList[i]));
