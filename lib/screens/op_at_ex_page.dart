@@ -1,6 +1,4 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import '../models/row_data.dart';
 import '../widgets/row_item.dart';
 import '../widgets/chart_widget.dart';
@@ -8,12 +6,12 @@ import '../process/row_data_processor.dart';
 import '../models/chart_data.dart';
 import '../widgets/range_selector.dart';
 
-class MyHomePage extends StatefulWidget {
+class OpAtExpPage extends StatefulWidget {
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _OpAtExpPageState createState() => _OpAtExpPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _OpAtExpPageState extends State<OpAtExpPage> {
   List<RowData> rows = [RowData()];
   List<ChartData> _chartData = [];
   final RowDataProcessor _rowDataProcessor = RowDataProcessor();
