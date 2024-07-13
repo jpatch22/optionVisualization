@@ -4,7 +4,6 @@ import 'package:flutter/widgets.dart';
 import '../models/row_data.dart';
 import '../widgets/row_item.dart';
 import '../widgets/chart_widget.dart';
-import '../process/data_generator.dart';
 import '../process/row_data_processor.dart';
 import '../models/chart_data.dart';
 import '../widgets/range_selector.dart';
