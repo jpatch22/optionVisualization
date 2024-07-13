@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 class RangeSelector extends StatefulWidget {
-  final double min;
-  final double max;
+  final ValueNotifier<double> minNotifier;
+  final ValueNotifier<double> maxNotifier;
   final ValueNotifier<RangeValues> rangeNotifier;
   final ValueChanged<RangeValues> onRangeChanged;
 
   RangeSelector({
     Key? key,
-    required this.min,
-    required this.max,
+    required this.minNotifier,
+    required this.maxNotifier,
     required this.rangeNotifier,
     required this.onRangeChanged,
   }) : super(key: key);
@@ -23,11 +23,15 @@ class _RangeSelectorState extends State<RangeSelector> {
   void initState() {
     super.initState();
     widget.rangeNotifier.addListener(_updateRange);
+    widget.minNotifier.addListener(_updateRange);
+    widget.maxNotifier.addListener(_updateRange);
   }
 
   @override
   void dispose() {
     widget.rangeNotifier.removeListener(_updateRange);
+    widget.minNotifier.removeListener(_updateRange);
+    widget.maxNotifier.removeListener(_updateRange);
     super.dispose();
   }
 
@@ -38,25 +42,25 @@ class _RangeSelectorState extends State<RangeSelector> {
   @override
   Widget build(BuildContext context) {
     final rangeValues = widget.rangeNotifier.value;
+    final min = widget.minNotifier.value;
+    final max = widget.maxNotifier.value;
+    final sideSpacing = 20.0;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
-          'Select Range:',
-          style: TextStyle(fontSize: 18),
-        ),
         Row(
           children: [
+            SizedBox(width: sideSpacing),
             Text(
-              'Start: ${rangeValues.start.round()}',
+              'Min: ${rangeValues.start.round()}',
               style: TextStyle(fontSize: 16),
             ),
             Expanded(
               child: RangeSlider(
                 values: rangeValues,
-                min: widget.min,
-                max: widget.max,
+                min: min,
+                max: max,
                 divisions: 100,
                 labels: RangeLabels(
                   rangeValues.start.round().toString(),
@@ -69,16 +73,13 @@ class _RangeSelectorState extends State<RangeSelector> {
               ),
             ),
             Text(
-              'End: ${rangeValues.end.round()}',
+              'Max: ${rangeValues.end.round()}',
               style: TextStyle(fontSize: 16),
             ),
+            SizedBox(width: sideSpacing)
           ],
         ),
         SizedBox(height: 20),
-        Text(
-          'Selected range: ${rangeValues.start.round()} - ${rangeValues.end.round()}',
-          style: TextStyle(fontSize: 16),
-        ),
       ],
     );
   }

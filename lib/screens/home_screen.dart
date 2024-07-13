@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import '../models/row_data.dart';
 import '../widgets/row_item.dart';
 import '../widgets/chart_widget.dart';
@@ -19,7 +21,8 @@ class _MyHomePageState extends State<MyHomePage> {
   final RowDataProcessor _rowDataProcessor = RowDataProcessor();
 
   RangeValues _selectedRange = RangeValues(10, 15);
-  RangeValues _initialRange = RangeValues(10, 15);
+  ValueNotifier<double> _maxVal = ValueNotifier(100.0);
+  ValueNotifier<double> _minVal = ValueNotifier(0.0);
   double maxRange = 100.0;
   TextEditingController _stockValueController = TextEditingController();
   ValueNotifier<RangeValues> _selectedRangeNotifier = ValueNotifier(RangeValues(10, 15));
@@ -98,8 +101,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             SizedBox(height: 10),
             RangeSelector(
-              min: 0,
-              max: 100,
+              minNotifier: _minVal,
+              maxNotifier: _maxVal,
               rangeNotifier: _selectedRangeNotifier,
               onRangeChanged: (values) {
                 _selectedRange = values;
@@ -147,8 +150,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _generatePlot() {
     double stockValue = double.tryParse(_stockValueController.text) ?? 0.0;
-    _selectedRange = RangeValues(1, 10);
-    _initialRange = RangeValues(1, 10);
+    _selectedRange = RangeValues(stockValue * 0.75, stockValue * 1.25);
+    _selectedRangeNotifier.value = _selectedRange;
+    _minVal.value = 0.0;
+    _maxVal.value = 10 * stockValue;
 
     _generateRandomData();
   }
