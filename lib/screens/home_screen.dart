@@ -25,32 +25,33 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Column(
         children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Text('Long/Short'),
-              Text('Put/Call'),
-              Text('Contract Price'),
-              Spacer(),
-              IconButton(
-                icon: Icon(Icons.add),
-                onPressed: addRow,
-              ),
-              IconButton(
-                icon: Icon(Icons.remove),
-                onPressed: removeRow,
-              ),
-            ],
-          ),
           Expanded(
             child: ListView.builder(
               itemCount: rows.length,
               itemBuilder: (context, index) {
-                return RowItem(
-                  key: UniqueKey(),
-                  rowData: rows[index],
-                  onAdd: () => addRowAt(index),
-                  onRemove: () => removeRowAt(index),
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Table(
+                    columnWidths: {
+                      0: FlexColumnWidth(),
+                      1: FlexColumnWidth(),
+                      2: FlexColumnWidth(),
+                      3: FixedColumnWidth(50),
+                      4: FixedColumnWidth(50),
+                    },
+                    children: [
+                      TableRow(
+                        children: [
+                          RowItem(
+                            key: UniqueKey(),
+                            rowData: rows[index],
+                            onAdd: () => addRowAt(index),
+                            onRemove: () => removeRowAt(index),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 );
               },
             ),
@@ -97,7 +98,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _generateRandomData() {
     setState(() {
-      // _chartData = _dataGenerator.generateRandomData(100);
       _chartData = _rowDataProcessor.calcMultOptionValAtExpiry(rows, 10, 15);
     });
   }

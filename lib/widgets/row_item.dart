@@ -67,6 +67,7 @@ class _RowItemState extends State<RowItem> {
             );
           }).toList(),
         ),
+        Text("Contract Price:"),
         Container(
           width: 100,
           child: TextField(
