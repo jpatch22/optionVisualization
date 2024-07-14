@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../requests/binomial_asset_requests.dart';
+import '../models/tree_node.dart';
+import '../widgets/tree_view.dart';
 
 class BinomialPage extends StatefulWidget {
   @override
@@ -14,6 +17,57 @@ class _BinomialPageState extends State<BinomialPage> {
   final TextEditingController dtController = TextEditingController();
   final TextEditingController numStepsController = TextEditingController();
   final TextEditingController stockController = TextEditingController();
+
+  TreeNode tree = TreeNode('Root', [
+    TreeNode('Child 1', [
+      TreeNode('Child 1.1'),
+      TreeNode('Child 1.2'),
+    ]),
+    TreeNode('Child 2', [
+      TreeNode('Child 2.1'),
+      TreeNode('Child 2.2', [
+        TreeNode('Child 2.2.1'),
+        TreeNode('Child 2.2.2'),
+      ]),
+    ]),
+  ]);
+
+  void updateTree(TreeNode newTree) {
+    setState(() {
+      tree = newTree;
+    });
+  }
+
+  void handleGenerateAssetTree() {
+    if (isBase) {
+      double u = double.tryParse(uController.text) ?? 0.0;
+      double v = double.tryParse(vController.text) ?? 0.0;
+      double s = double.tryParse(stockController.text) ?? 0.0;
+      int numSteps = int.tryParse(numStepsController.text) ?? 0;
+      BinomialAssetRequest.sendBinomialAssetRequest(s, numSteps, u, v);
+    } else {
+      double vol = double.tryParse(volController.text) ?? 0.0;
+      double dt = double.tryParse(dtController.text) ?? 0.0;
+      double s = double.tryParse(stockController.text) ?? 0.0;
+      int numSteps = int.tryParse(numStepsController.text) ?? 0;
+      BinomialAssetRequest.sendBinomialAssetDriftRequest(s, numSteps, vol, dt);
+    }
+    
+    // Example of updating the tree (replace with your logic)
+    updateTree(TreeNode('New Root', [
+      TreeNode('New Child 1', [
+        TreeNode('New Child 1.1'),
+        TreeNode('New Child 1.2'),
+      ]),
+      TreeNode('New Child 2', [
+        TreeNode('New Child 2.1'),
+        TreeNode('New Child 2.2', [
+          TreeNode('New Child 2.2.1'),
+          TreeNode('New Child 2.2.2'),
+        ]),
+      ]),
+    ]));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +87,25 @@ class _BinomialPageState extends State<BinomialPage> {
               child: Text(isBase ? 'Switch to Drift' : 'Switch to Base'),
             ),
             SizedBox(height: 20),
-            // Display different text fields based on the state
             isBase ? buildBaseFields() : buildDriftFields(),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: handleGenerateAssetTree,
+              child: Text('Generate Asset Tree'),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Container(
+                    width: 1000,
+                    height: 800,
+                    child: TreeView(root: tree),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -53,8 +124,8 @@ class _BinomialPageState extends State<BinomialPage> {
               child: TextField(
                 controller: uController,
                 decoration: InputDecoration(
-                  isDense: true, // Reduces the height of the text field
-                  contentPadding: EdgeInsets.all(8), // Adjust padding to make it smaller
+                  isDense: true,
+                  contentPadding: EdgeInsets.all(8),
                 ),
               ),
             ),
@@ -69,13 +140,14 @@ class _BinomialPageState extends State<BinomialPage> {
               child: TextField(
                 controller: vController,
                 decoration: InputDecoration(
-                  isDense: true, // Reduces the height of the text field
-                  contentPadding: EdgeInsets.all(8), // Adjust padding to make it smaller
+                  isDense: true,
+                  contentPadding: EdgeInsets.all(8),
                 ),
               ),
             ),
           ],
         ),
+        SizedBox(width: 20), // Add spacing between columns
         Column(
           children: [
             Text('Initial Stock Price'),
@@ -84,13 +156,14 @@ class _BinomialPageState extends State<BinomialPage> {
               child: TextField(
                 controller: stockController,
                 decoration: const InputDecoration(
-                  isDense: true, // Reduces the height of the text field
-                  contentPadding: EdgeInsets.all(8), // Adjust padding to make it smaller
+                  isDense: true,
+                  contentPadding: EdgeInsets.all(8),
                 ),
               ),
             ),
           ],
         ),
+        SizedBox(width: 20), // Add spacing between columns
         Column(
           children: [
             Text('Num Steps'),
@@ -99,8 +172,8 @@ class _BinomialPageState extends State<BinomialPage> {
               child: TextField(
                 controller: numStepsController,
                 decoration: const InputDecoration(
-                  isDense: true, // Reduces the height of the text field
-                  contentPadding: EdgeInsets.all(8), // Adjust padding to make it smaller
+                  isDense: true,
+                  contentPadding: EdgeInsets.all(8),
                 ),
               ),
             ),
@@ -122,8 +195,8 @@ class _BinomialPageState extends State<BinomialPage> {
               child: TextField(
                 controller: volController,
                 decoration: InputDecoration(
-                  isDense: true, // Reduces the height of the text field
-                  contentPadding: EdgeInsets.all(8), // Adjust padding to make it smaller
+                  isDense: true,
+                  contentPadding: EdgeInsets.all(8),
                 ),
               ),
             ),
@@ -138,13 +211,14 @@ class _BinomialPageState extends State<BinomialPage> {
               child: TextField(
                 controller: dtController,
                 decoration: InputDecoration(
-                  isDense: true, // Reduces the height of the text field
-                  contentPadding: EdgeInsets.all(8), // Adjust padding to make it smaller
+                  isDense: true,
+                  contentPadding: EdgeInsets.all(8),
                 ),
               ),
             ),
           ],
         ),
+        SizedBox(width: 20), // Add spacing between columns
         Column(
           children: [
             Text('Initial Stock Price'),
@@ -153,13 +227,14 @@ class _BinomialPageState extends State<BinomialPage> {
               child: TextField(
                 controller: stockController,
                 decoration: const InputDecoration(
-                  isDense: true, // Reduces the height of the text field
-                  contentPadding: EdgeInsets.all(8), // Adjust padding to make it smaller
+                  isDense: true,
+                  contentPadding: EdgeInsets.all(8),
                 ),
               ),
             ),
           ],
         ),
+        SizedBox(width: 20), // Add spacing between columns
         Column(
           children: [
             Text('Num Steps'),
@@ -168,8 +243,8 @@ class _BinomialPageState extends State<BinomialPage> {
               child: TextField(
                 controller: numStepsController,
                 decoration: const InputDecoration(
-                  isDense: true, // Reduces the height of the text field
-                  contentPadding: EdgeInsets.all(8), // Adjust padding to make it smaller
+                  isDense: true,
+                  contentPadding: EdgeInsets.all(8),
                 ),
               ),
             ),
