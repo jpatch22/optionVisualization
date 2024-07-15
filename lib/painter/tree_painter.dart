@@ -9,10 +9,10 @@ class TreePainter extends CustomPainter {
   final double verticalSpacing;
 
   TreePainter(this.root, {
-    this.nodeWidth = 100.0,
-    this.nodeHeight = 50.0,
-    this.horizontalSpacing = 80.0,
-    this.verticalSpacing = 50.0
+    this.nodeWidth = 80.0,  // Adjusted size
+    this.nodeHeight = 40.0, // Adjusted size
+    this.horizontalSpacing = 60.0,
+    this.verticalSpacing = 40.0
   });
 
   @override
@@ -26,7 +26,7 @@ class TreePainter extends CustomPainter {
       textDirection: TextDirection.ltr,
     );
 
-    void drawNode(TreeNode node, Offset position, double level) {
+    void drawNode(TreeNode node, Offset position) {
       // Draw the bubble (rectangle with rounded corners) around the text
       final Rect rect = Rect.fromCenter(center: position, width: nodeWidth, height: nodeHeight);
       final RRect rrect = RRect.fromRectAndRadius(rect, Radius.circular(10));
@@ -35,7 +35,7 @@ class TreePainter extends CustomPainter {
       // Draw the text
       textPainter.text = TextSpan(
         text: node.value,
-        style: TextStyle(color: Colors.white, fontSize: 16),
+        style: TextStyle(color: Colors.white, fontSize: 14), // Adjusted font size
       );
       textPainter.layout(minWidth: 0, maxWidth: nodeWidth - 20);
       final Offset textOffset = Offset(
@@ -44,23 +44,20 @@ class TreePainter extends CustomPainter {
       );
       textPainter.paint(canvas, textOffset);
 
-      final double childLevel = level + 1;
       final double childX = position.dx + horizontalSpacing + nodeWidth / 2;
-      final double offsetY = node.children.length > 1
-          ? size.height / (node.children.length + 1)
-          : size.height / 2;
+      final double offsetY = verticalSpacing;
 
       for (int i = 0; i < node.children.length; i++) {
-        final double childY = offsetY * (i + 1);
+        final double childY = position.dy + (i - node.children.length / 2 + 0.5) * offsetY;
         final Offset childPosition = Offset(childX, childY);
         final Offset lineStart = Offset(position.dx + nodeWidth / 2, position.dy);
         final Offset lineEnd = Offset(childPosition.dx - nodeWidth / 2, childPosition.dy);
         canvas.drawLine(lineStart, lineEnd, paint);
-        drawNode(node.children[i], childPosition, childLevel);
+        drawNode(node.children[i], childPosition);
       }
     }
 
-    drawNode(root, Offset(nodeWidth / 2 + 20, size.height / 2), 0);
+    drawNode(root, Offset(nodeWidth / 2 + 20, size.height / 2));
   }
 
   @override

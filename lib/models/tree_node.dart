@@ -1,6 +1,11 @@
 class TreeNode {
   final String value;
-  final List<TreeNode> children;
+  List<TreeNode> children = [];
 
-  TreeNode(this.value, [this.children = const <TreeNode>[]]);
+  TreeNode(this.value);
+
+  @override
+  String toString() {
+    return "Value: $value || children: $children";
+  }
 }
