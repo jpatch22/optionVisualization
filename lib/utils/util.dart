@@ -1,5 +1,6 @@
 import 'package:option_visualizer/models/tree_node.dart';
 import '../models/tuple.dart';
+import 'dart:convert';
 
 class Utils {
   static TreeNode? convertArrayToTree(List<List<double>> arr) {
@@ -12,7 +13,7 @@ class Utils {
     treeMap[Tuple(0, 0)] = root;
     for (int i = 1; i < treeSize; i++) {
       for (int j = 0; j <= i; j++) {
-        TreeNode newNode = TreeNode(arr[i][j].toString());
+        TreeNode newNode = TreeNode(arr[i][j].toStringAsFixed(2));
         treeMap[Tuple(i, j)] = newNode;
         if (j - 1 >= 0) {
           treeMap[Tuple(i - 1, j - 1)]?.children.add(newNode);
@@ -22,8 +23,18 @@ class Utils {
         }
       }
     }
-    print("$root");
 
     return root;
+  }
+
+  static List<List<double>> parseAssetPrices(String jsonString, String key) {
+    final jsonResponse = json.decode(jsonString);
+    final assetPricesJson = jsonResponse[key] as List<dynamic>;
+
+    List<List<double>> assetPrices = assetPricesJson.map((row) {
+      return (row as List<dynamic>).map((value) => value as double).toList();
+    }).toList();
+
+    return assetPrices;
   }
 }
