@@ -1,8 +1,17 @@
+import 'package:option_visualizer/models/chart_data.dart';
 import 'package:option_visualizer/models/tree_node.dart';
 import '../models/tuple.dart';
 import 'dart:convert';
 
 class Utils {
+  static List<ChartData> convertArrayToChart(List<List<double>> items) {
+    List<ChartData> res = [];
+    for (int i = 0; i < items[0].length; i++) {
+      res.add(ChartData(items[0][i], items[1][i]));
+    }
+    return res;
+  }
+
   static TreeNode? convertArrayToTree(List<List<double>> arr) {
     int treeSize = arr.length;
     if (treeSize == 0) {

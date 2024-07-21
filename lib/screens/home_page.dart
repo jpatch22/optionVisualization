@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:option_visualizer/screens/asset_sim.dart';
 import 'package:option_visualizer/screens/binomial_assets.dart';
 import 'op_at_ex_page.dart';
 
@@ -12,7 +13,7 @@ class HomePage extends StatelessWidget {
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize
-              .min, // Centers the column vertically in the middle of the screen
+              .min,
           children: [
             ElevatedButton(
               onPressed: () {
@@ -23,7 +24,7 @@ class HomePage extends StatelessWidget {
               },
               child: Text('Go to Option Valuation Visualizer'),
             ),
-            SizedBox(height: 20), // Add some space between the buttons
+            SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -33,6 +34,14 @@ class HomePage extends StatelessWidget {
               },
               child: Text("Binomial Modelling Page"),
             ),
+            SizedBox(height: 20),
+            ElevatedButton(onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AssetSimPage())
+              );
+            }, 
+            child: Text("Asset Price Simulation"))
           ],
         ),
       ),

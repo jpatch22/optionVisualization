@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'package:option_visualizer/constants/constants.dart';
 import 'dart:convert';
 import '../utils/util.dart';
 
@@ -14,7 +15,7 @@ class BinomialOptionRequest {
     double T,
     String optionType
   ) async {
-    final url = Uri.parse("http://127.0.0.1:8000/binomial_options/");
+    final url = Uri.parse(Constants.baseUrl + Constants.binOpEndpoint);
     final headers = {"Content-Type": "application/json"};
     final body = jsonEncode({
       "u": u,
@@ -54,7 +55,7 @@ class BinomialOptionRequest {
     double r,
     String optionType
   ) async {
-    final url = Uri.parse('http://127.0.0.1:8000/binomial_options/');
+    final url = Uri.parse(Constants.baseUrl + Constants.binOpEndpoint);
     final headers = {"Content-Type": "application/json"};
     final body = jsonEncode({
       "sigma": vol,

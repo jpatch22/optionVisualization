@@ -1,6 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../utils/util.dart';
+import '../constants/constants.dart';
 
 class BinomialAssetRequest {
   static Future<List<List<double>>?> sendBinomialAssetRequest(
@@ -9,7 +10,7 @@ class BinomialAssetRequest {
     double u,
     double v,
   ) async {
-    final url = Uri.parse("http://127.0.0.1:8000/binomial_asset/");
+    final url = Uri.parse(Constants.baseUrl + Constants.binEndpoint);
     final headers = {"Content-Type": "application/json"};
     final body = jsonEncode({
       "u": u,
@@ -38,7 +39,7 @@ class BinomialAssetRequest {
     double vol,
     double T,
   ) async {
-    final url = Uri.parse('http://127.0.0.1:8000/binomial_asset/');
+    final url = Uri.parse(Constants.baseUrl + Constants.baseUrl);
     final headers = {"Content-Type": "application/json"};
     final body = jsonEncode({
       "sigma": vol,
