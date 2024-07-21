@@ -108,7 +108,7 @@ class _OpAtExpPageState extends State<OpAtExpPage> {
             SizedBox(height: 10),
             Container(
               height: 400,
-              child: ChartWidget(data: _chartData),
+              child: ChartWidget(data: _chartData, xAxisLabel: "Stock Price At Expriy", yAxisLabel: "Return",),
             ),
           ],
         ),

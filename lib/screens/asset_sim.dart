@@ -115,7 +115,7 @@ class _AssetSimPageState extends State<AssetSimPage> {
             SizedBox(height: 10),
             Container(
               height: 400,
-              child: ChartWidget(data: _chartData),
+              child: ChartWidget(data: _chartData, xAxisLabel: "Time (Years)", yAxisLabel: "Stock Price",),
             ),
           ],
         ),
