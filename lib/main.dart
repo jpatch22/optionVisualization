@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'screens/home_screen.dart';
+import 'package:option_visualizer/screens/binomial_assets.dart';
+import 'screens/home_page.dart';
+import 'screens/op_at_ex_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -9,11 +11,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Dynamic Rows',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(),
+      title: 'Implementations of Quant Finance Concepts',
+      initialRoute: '/',
+      routes: {
+        '/': (context) => HomePage(),
+        '/opAtExp': (context) => OpAtExpPage(),
+        '/binomial': (context) => BinomialPage(),
+      },
     );
   }
 }
